@@ -26,3 +26,53 @@ http://localhost:9000
 ```
 http://localhost:3000
 ```
+
+## test
+- signon (post http://localhost:3000/api/v1/users/signon)
+```
+Header
+  Content-Type : application/json
+Body
+  {
+    "email: "test@naver.com",
+    "name": "test",
+    "password": "123123"
+  }
+```
+
+- signin (post http://localhost:3000/api/v1/users/signin)
+```
+Header
+  Content-Type : application/json
+Body
+  {
+    "email: "test@naver.com",
+    "password": "123123"
+  }
+```
+
+- whoami (get http://localhost:3000/api/v1/users/whoami)
+```
+Header
+  Content-Type : application/json
+  Authorization : Bearer {signin res > access_token}
+```
+
+- catagories list (get http://localhost:3000/api/v1/categories)
+```
+Header
+  Content-Type : application/json
+  Authorization : Bearer {signin res > access_token}
+```
+
+- catagories insert (get http://localhost:3000/api/v1/categories)
+```
+Header
+  Content-Type : application/json
+  Authorization : Bearer {signin res > access_token}
+Body
+  {
+    "name": "test",
+    "cat_type": "NonEssential"
+  }
+```
