@@ -11,8 +11,8 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use anyhow::Context;
-use axum::extract::MatchedPath;
-use axum::http::{HeaderValue, Request};
+use axum::extract::{MatchedPath, Request};
+use axum::http::{HeaderValue};
 use axum::middleware::{self, Next};
 use axum::response::IntoResponse;
 use axum::routing::get;
@@ -90,8 +90,10 @@ impl ApplicationServer {
 
         info!("🚀 Server has launched on https://{addr}");
         debug!("routes initialized, listening on port {}", port);
-        axum::Server::bind(&addr)
-            .serve(router.into_make_service())
+
+        let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+
+        axum::serve(listener, router.into_make_service())
             .with_graceful_shutdown(Self::shutdown_signal())
             .await
             .context("error while starting API server")?;
@@ -123,7 +125,7 @@ impl ApplicationServer {
     }
 
     // request 받은 요청들 metric 에 넣기 위해 가공? 하는듯
-    async fn track_metrics<B>(request: Request<B>, next: Next<B>) -> impl IntoResponse {
+    async fn track_metrics(request: Request, next: Next) -> impl IntoResponse {
         let path = if let Some(matched_path) = request.extensions().get::<MatchedPath>() {
             matched_path.as_str().to_owned()
         } else {
