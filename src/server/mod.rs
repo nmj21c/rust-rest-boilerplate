@@ -122,6 +122,7 @@ impl ApplicationServer {
         }
     }
 
+    // request 받은 요청들 metric 에 넣기 위해 가공? 하는듯
     async fn track_metrics<B>(request: Request<B>, next: Next<B>) -> impl IntoResponse {
         let path = if let Some(matched_path) = request.extensions().get::<MatchedPath>() {
             matched_path.as_str().to_owned()
