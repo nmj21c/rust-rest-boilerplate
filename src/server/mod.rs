@@ -136,13 +136,14 @@ impl ApplicationServer {
         let status = response.status().as_u16().to_string();
 
         let labels = [
-            ("method", method.to_string()),
-            ("path", path),
-            ("status", status),
+            ("method", format!("{}!", method.to_string())),
+            ("path", format!("{}!", path)),
+            ("status", format!("{}!", status)),
+            ("latency", format!("{}!", latency)),
         ];
 
-        metrics::increment_counter!("http_requests_total", &labels);
-        metrics::histogram!("http_requests_duration_seconds", latency, &labels);
+        metrics::counter!("http_requests_total", &labels);
+        metrics::histogram!("http_requests_duration_seconds", &labels);
 
         response
     }
