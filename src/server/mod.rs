@@ -40,6 +40,7 @@ pub struct ApplicationServer;
 
 impl ApplicationServer {
     pub async fn serve(config: Arc<AppConfig>, db: Database) -> anyhow::Result<()> {
+        // request 기록 하는듯 아래 get /metrics 에서 핸들러를 이용해서 response 한다
         let recorder_handle = PrometheusBuilder::new()
             .set_buckets_for_metric(
                 Matcher::Full(String::from("http_requests_duration_seconds")),

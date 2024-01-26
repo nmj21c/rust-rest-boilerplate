@@ -34,7 +34,7 @@ Header
   Content-Type : application/json
 Body
   {
-    "email: "test@naver.com",
+    "email": "test@naver.com",
     "name": "test",
     "password": "123123"
   }
