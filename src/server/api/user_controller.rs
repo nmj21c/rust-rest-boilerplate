@@ -14,7 +14,10 @@ use crate::server::services::Services;
 
 pub struct UserController;
 
+// 유저 컨트롤러
 impl UserController {
+
+    // 라우터 정의 /api/v1/users 이하 정의
     pub fn app() -> Router {
         Router::new()
             .route("/signup", post(Self::signup_user_endpoint))
@@ -25,6 +28,7 @@ impl UserController {
             .route("/", put(Self::update_user_endpoint))
     }
 
+    // 가입
     pub async fn signup_user_endpoint(
         Extension(services): Extension<Services>,
         ValidationExtractor(request): ValidationExtractor<SignUpUserDto>,
@@ -39,6 +43,8 @@ impl UserController {
 
         Ok(Json(UserAuthenicationResponse { user: created_user }))
     }
+
+    // 로그인
     pub async fn signin_user_endpoint(
         jar: CookieJar,
         Extension(services): Extension<Services>,
@@ -57,6 +63,7 @@ impl UserController {
         Ok((cookie, Json(UserAuthenicationResponse { user })))
     }
 
+    // 토큰으로 내 정보 조회
     pub async fn get_current_user_endpoint(
         RequiredAuthentication(user_id, services): RequiredAuthentication,
     ) -> AppResult<Json<UserAuthenicationResponse>> {
@@ -67,6 +74,7 @@ impl UserController {
         Ok(Json(UserAuthenicationResponse { user: current_user }))
     }
 
+    // 내 정보 업데이트
     pub async fn update_user_endpoint(
         RequiredAuthentication(user_id, services): RequiredAuthentication,
         Json(request): Json<UpdateUserDto>,
@@ -78,6 +86,7 @@ impl UserController {
         Ok(Json(UserAuthenicationResponse { user: updated_user }))
     }
 
+    // 토큰 갱신
     pub async fn refresh_user_endpoint(
         jar: CookieJar,
         Extension(services): Extension<Services>,
@@ -92,6 +101,7 @@ impl UserController {
         Ok((cookie, Json(UserAuthenicationResponse { user })))
     }
 
+    // 로그아웃
     pub async fn signout_user_endpoint(
         jar: CookieJar,
         Extension(services): Extension<Services>,
